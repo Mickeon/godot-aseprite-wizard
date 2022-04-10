@@ -263,6 +263,16 @@ func _create_atlastexture_from_frame(image, frame_data, sprite_frames: SpriteFra
 	# It's however exponentially slow.
 	var frame = frame_data.frame
 	var region := Rect2(frame.x, frame.y, frame.w, frame.h)
+	var margin = Rect2()
+
+	if (frame_data.trimmed):
+		var sprite_source_size = frame_data.spriteSourceSize
+		var source_size = frame_data.sourceSize
+		margin = Rect2(
+				sprite_source_size.x, sprite_source_size.y, 
+				source_size.w - frame.w, source_size.h - frame.h
+		)
+	
 	for animation_name in sprite_frames.get_animation_names():
 		for index in sprite_frames.get_frame_count(animation_name):
 			var search_frame = sprite_frames.get_frame(animation_name, index)
@@ -275,6 +285,7 @@ func _create_atlastexture_from_frame(image, frame_data, sprite_frames: SpriteFra
 	var atlas_texture := AtlasTexture.new()
 	atlas_texture.atlas = image
 	atlas_texture.region = region
+	atlas_texture.margin = margin
 	return atlas_texture
 
 
